@@ -1,0 +1,78 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
+use work.ff.all;
+
+-- Chemin de données du processeur simple. Il regroupe :
+--             * les registres R0 à R7,
+--             * le registre A,
+--             * le registre G,
+--             * le registre d'instruction IR,
+--             * le multiplexeur de bus,
+--             * le bloc addition/soustraction.
+--
+-- La FSM pilote ce datapath à l'aide des signaux Ain, Gin, IRin, AddSub, Gout, DINout, Rin et Rout.
+entity datapath is
+	port(
+		 clk, Ain, Gin, IRin, Gout, DINout : in std_logic;
+		 operation : in std_logic_vector(2 downto 0);
+		 DIN : in std_logic_vector(8 downto 0);
+		 Rin, Rout : in std_logic_vector(7 downto 0);
+		 Bus_o, instruction : out std_logic_vector(8 downto 0);
+		 NEG, DIV0  : out std_logic
+		 
+		 -- sorties pour observer les valeurs des registres dans le testbench
+		 
+--		 data0_o,data1_o,data2_o,data3_o,data4_o,data5_o : out std_logic_vector(8 downto 0);
+--		 data6_o,data7_o,dataA_o,dataG_o, dataIR_o : out std_logic_vector(8 downto 0)
+	);  
+end datapath;
+
+architecture path of datapath is
+	-- Contenu des registres internes
+	signal data0,data1,data2,data3,data4,data5,data6,data7,dataA,dataG,resALU : std_logic_vector(8 downto 0):= (others => '0');
+	
+	signal Bus_s : std_logic_vector(8 downto 0) := (others => '0');
+	 
+begin
+	Bus_o <= Bus_s;
+
+	-- Registres généraux R0 à R7.
+	R0 : vDFFE generic map(9) port map(clk, Rin(0), Bus_s, data0);
+	R1 : vDFFE generic map(9) port map(clk, Rin(1), Bus_s, data1);
+	R2 : vDFFE generic map(9) port map(clk, Rin(2), Bus_s, data2);
+	R3 : vDFFE generic map(9) port map(clk, Rin(3), Bus_s, data3);
+	R4 : vDFFE generic map(9) port map(clk, Rin(4), Bus_s, data4);
+	R5 : vDFFE generic map(9) port map(clk, Rin(5), Bus_s, data5);
+	R6 : vDFFE generic map(9) port map(clk, Rin(6), Bus_s, data6);
+	R7 : vDFFE generic map(9) port map(clk, Rin(7), Bus_s, data7);
+	
+	-- Registres spécialisés.
+	A : vDFFE generic map(9) port map(clk, Ain, Bus_s, dataA);
+	G : vDFFE generic map(9) port map(clk, Gin, resALU, dataG);
+	IR : vDFFE generic map(9) port map(clk, IRin, DIN, instruction);
+	
+	-- Multiplexeur alimentant le bus interne.
+   -- Le vecteur de sélection est construit avec DINout, Gout et Rout.
+	mux10 : entity work.Mux10 generic map(9) port map(
+														data0,data1,data2,data3,data4,data5,data6,data7,
+														dataG,DIN, 
+														std_logic_vector(DINout & Gout & Rout), 
+														Bus_s);
+	blocALU : entity work.ALU port map(dataA,Bus_s,operation,resALU,NEG,DIV0);
+	
+	-- sorties pour debug / testbench
+	
+--	data0_o <= data0;
+--	data1_o <= data1;
+--	data2_o <= data2;
+--	data3_o <= data3;
+--	data4_o <= data4;
+--	data5_o <= data5;
+--	data6_o <= data6;
+--	data7_o <= data7;
+--	dataA_o <= dataA;
+--	dataG_o <= dataG;
+--	dataIR_o <= instruction;
+	
+end path;

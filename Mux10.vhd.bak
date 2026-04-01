@@ -1,0 +1,41 @@
+library ieee;
+use ieee.std_logic_1164.all;
+
+-- Multiplexeur 10 vers 1 de largeur paramétrable (vecteur de 9 bits par défaut))
+-- Il sélectionne la source qui alimente le bus interne du processeur.
+-- Les entrées de données sont les valeurs des registres R0 à R7, G et la valeur de DIN.
+-- La Selection est codé en one-hot sur 10 bits :
+--             bit 0 -> R0
+--             bit 1 -> R1
+--             ...
+--             bit 7 -> R7
+--             bit 8 -> G
+--             bit 9 -> DIN
+entity Mux10 is
+    generic(n : integer := 9);
+    port(
+        R0,R1,R2,R3,R4,R5,R6,R7,G,DIN : in std_logic_vector(n-1 downto 0);
+        Selection  : in std_logic_vector(9 downto 0);
+        Bus_o : out std_logic_vector(n-1 downto 0)
+    );
+end Mux10;
+
+architecture implmux10 of Mux10 is
+begin
+
+-- Affectation combinatoire du bus selon la sélection one-hot.
+Bus_o <=
+    R0  when Selection="0000000001" else
+    R1  when Selection="0000000010" else
+    R2  when Selection="0000000100" else
+    R3  when Selection="0000001000" else
+    R4  when Selection="0000010000" else
+    R5  when Selection="0000100000" else
+    R6  when Selection="0001000000" else
+    R7  when Selection="0010000000" else
+    G   when Selection="0100000000" else
+    DIN when Selection="1000000000" else
+	 -- Par défaut, la sortie est la valeur du DIN
+    DIN;
+
+end implmux10;
