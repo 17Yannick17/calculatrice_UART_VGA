@@ -1,0 +1,8 @@
+
+State Machine - |Text_screen_test|SV
+Name SV.done SV.clean3 SV.clean2 SV.clean1 SV.clean0 
+SV.clean0 0 0 0 0 0 
+SV.clean1 0 0 0 1 1 
+SV.clean2 0 0 1 0 1 
+SV.clean3 0 1 0 0 1 
+SV.done 1 0 0 0 1 

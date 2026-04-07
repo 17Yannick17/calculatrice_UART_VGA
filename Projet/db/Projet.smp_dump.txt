@@ -1,0 +1,21 @@
+
+State Machine - |calculator_vga_top|vga_calc_display:vga_display_inst|sv
+Name sv.done sv.clean3 sv.clean2 sv.clean1 sv.clean0 
+sv.clean0 0 0 0 0 0 
+sv.clean1 0 0 0 1 1 
+sv.clean2 0 0 1 0 1 
+sv.clean3 0 1 0 0 1 
+sv.done 1 0 0 0 1 
+
+State Machine - |calculator_vga_top|controller:controller_inst|state
+Name state.ERROR state.SHOW_RESULT state.ATTENTE_EXECUTION state.EXECUTION state.LOAD_R2_VALUE state.LOAD_R2_INSTRUCTION state.LOAD_R1_VALUE state.LOAD_R1_INSTRUCTION state.OPERANDE2 state.OPERANDE1 
+state.OPERANDE1 0 0 0 0 0 0 0 0 0 0 
+state.OPERANDE2 0 0 0 0 0 0 0 0 1 1 
+state.LOAD_R1_INSTRUCTION 0 0 0 0 0 0 0 1 0 1 
+state.LOAD_R1_VALUE 0 0 0 0 0 0 1 0 0 1 
+state.LOAD_R2_INSTRUCTION 0 0 0 0 0 1 0 0 0 1 
+state.LOAD_R2_VALUE 0 0 0 0 1 0 0 0 0 1 
+state.EXECUTION 0 0 0 1 0 0 0 0 0 1 
+state.ATTENTE_EXECUTION 0 0 1 0 0 0 0 0 0 1 
+state.SHOW_RESULT 0 1 0 0 0 0 0 0 0 1 
+state.ERROR 1 0 0 0 0 0 0 0 0 1 

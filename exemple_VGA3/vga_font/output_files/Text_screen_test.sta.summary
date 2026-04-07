@@ -1,0 +1,77 @@
+------------------------------------------------------------
+Timing Analyzer Summary
+------------------------------------------------------------
+
+Type  : Slow 1200mV 85C Model Setup 'CLOCK_50'
+Slack : 12.368
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Setup 'vga|pll|altpll_component|auto_generated|pll1|clk[0]'
+Slack : 30.206
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Hold 'vga|pll|altpll_component|auto_generated|pll1|clk[0]'
+Slack : 0.285
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Hold 'CLOCK_50'
+Slack : 0.325
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Minimum Pulse Width 'CLOCK_50'
+Slack : 9.466
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Minimum Pulse Width 'vga|pll|altpll_component|auto_generated|pll1|clk[0]'
+Slack : 19.502
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Setup 'CLOCK_50'
+Slack : 13.056
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Setup 'vga|pll|altpll_component|auto_generated|pll1|clk[0]'
+Slack : 31.017
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Hold 'vga|pll|altpll_component|auto_generated|pll1|clk[0]'
+Slack : 0.245
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Hold 'CLOCK_50'
+Slack : 0.294
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Minimum Pulse Width 'CLOCK_50'
+Slack : 9.477
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Minimum Pulse Width 'vga|pll|altpll_component|auto_generated|pll1|clk[0]'
+Slack : 19.519
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Setup 'CLOCK_50'
+Slack : 16.294
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Setup 'vga|pll|altpll_component|auto_generated|pll1|clk[0]'
+Slack : 35.020
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Hold 'vga|pll|altpll_component|auto_generated|pll1|clk[0]'
+Slack : 0.142
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Hold 'CLOCK_50'
+Slack : 0.148
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Minimum Pulse Width 'CLOCK_50'
+Slack : 9.272
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Minimum Pulse Width 'vga|pll|altpll_component|auto_generated|pll1|clk[0]'
+Slack : 19.552
+TNS   : 0.000
+
+------------------------------------------------------------

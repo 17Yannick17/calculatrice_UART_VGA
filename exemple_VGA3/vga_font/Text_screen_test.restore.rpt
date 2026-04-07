@@ -1,0 +1,118 @@
+Restore Archived Project report for Text_screen_test
+Fri Mar 26 14:02:15 2021
+Quartus Prime Version 20.1.1 Build 720 11/11/2020 SJ Lite Edition
+
+
+---------------------
+; Table of Contents ;
+---------------------
+  1. Legal Notice
+  2. Restore Archived Project Summary
+  3. Restore Archived Project Messages
+  4. Files Restored
+  5. Files Not Restored
+
+
+
+----------------
+; Legal Notice ;
+----------------
+Copyright (C) 2020  Intel Corporation. All rights reserved.
+Your use of Intel Corporation's design tools, logic functions 
+and other software and tools, and any partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Intel Program License 
+Subscription Agreement, the Intel Quartus Prime License Agreement,
+the Intel FPGA IP License Agreement, or other applicable license
+agreement, including, without limitation, that your use is for
+the sole purpose of programming logic devices manufactured by
+Intel and sold by Intel or its authorized distributors.  Please
+refer to the applicable agreement for further details, at
+https://fpgasoftware.intel.com/eula.
+
+
+
++-------------------------------------------------------------------------+
+; Restore Archived Project Summary                                        ;
++---------------------------------+---------------------------------------+
+; Restore Archived Project Status ; Successful - Fri Mar 26 14:02:15 2021 ;
+; Revision Name                   ; Text_screen_test                      ;
+; Top-level Entity Name           ; Text_screen_test                      ;
+; Family                          ; Cyclone II                            ;
++---------------------------------+---------------------------------------+
+
+
++-----------------------------------+
+; Restore Archived Project Messages ;
++-----------------------------------+
+Warning (292006): Can't contact license server "6601@a2.cmc.ca" -- this server will be ignored.
+Warning (13177): Your design targets the device family "Cyclone II". The specified family is not a valid device family, is not installed, or is not supported in this version of the Quartus Prime software. If you restored a project from an archived version, your project was successfully restored, but you still must specify or install a supported device family.
+Info (13198): Your project was successfully restored, but the device information in the Flow Summary report cannot be updated until the design targets a supported device family.
+Info: Successfully restored 'C:/WORK/COURS/6GEI367/6GEI367_2020/TERASIC/VHDL_Examples_DE1/CH7_DE1.qar' into the 'C:/WORK/COURS/6GEI367/6GEI367_2020/TERASIC/VHDL_Examples_DE1/CH7_DE1_restored/' directory
+Info: Generated report 'Text_screen_test.restore.rpt'
+Info (23030): Evaluation of Tcl script c:/intelfpga_lite/20.1/quartus/common/tcl/apps/qpm/qar.tcl was successful
+Info: Quartus Prime Shell was successful. 0 errors, 3 warnings
+    Info: Peak virtual memory: 4871 megabytes
+    Info: Processing ended: Fri Mar 26 14:02:15 2021
+    Info: Elapsed time: 00:00:03
+    Info: Total CPU time (on all processors): 00:00:01
+
+
++-------------------------------------------------------------+
+; Files Restored                                              ;
++-------------------------------------------------------------+
+; File Name                                                   ;
++-------------------------------------------------------------+
+; Sprite_B.mif                                                ;
+; Sprite_G.mif                                                ;
+; Sprite_R.mif                                                ;
+; Sprite_RGB.mif                                              ;
+; Sprite_test.vhd                                             ;
+; Text_Terminal.vhd                                           ;
+; Text_screen_test.qpf                                        ;
+; Text_screen_test.qsf                                        ;
+; Text_screen_test.vhd                                        ;
+; Text_screen_test_color.vhd                                  ;
+; VGAPLL.ppf                                                  ;
+; VGAPLL.qip                                                  ;
+; VGAPLL.vhd                                                  ;
+; ascii_char_rom.mif                                          ;
+; debounce.vhd                                                ;
+; incremental_db/compiled_partitions/Text_screen_test.db_info ;
+; keyboard.vhd                                                ;
+; krom.qip                                                    ;
+; krom.vhd                                                    ;
+; scan_to_ascii.mif                                           ;
+; vga_color.vhd                                               ;
+; vga_font.vhd                                                ;
+; vga_sprite1.vhd                                             ;
+; vga_sprite2.vhd                                             ;
+; vram.qip                                                    ;
+; vram.vhd                                                    ;
+; vramc.qip                                                   ;
+; vramc.vhd                                                   ;
+; vrams.qip                                                   ;
+; vrams.vhd                                                   ;
+; vrom.qip                                                    ;
+; vrom.vhd                                                    ;
+; vrom_b.qip                                                  ;
+; vrom_b.vhd                                                  ;
+; vrom_g.qip                                                  ;
+; vrom_g.vhd                                                  ;
+; vrom_r.qip                                                  ;
+; vrom_r.vhd                                                  ;
+; vrom_rgb.qip                                                ;
+; vrom_rgb.vhd                                                ;
+; assignment_defaults.qdf                                     ;
++-------------------------------------------------------------+
+
+
++--------------------+
+; Files Not Restored ;
++--------------------+
+; File Name          ;
++--------------------+
+
+

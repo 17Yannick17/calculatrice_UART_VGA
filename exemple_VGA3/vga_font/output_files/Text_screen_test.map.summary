@@ -1,0 +1,16 @@
+Analysis & Synthesis Status : Successful - Tue Apr  7 09:06:28 2026
+Quartus Prime Version : 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
+Revision Name : Text_screen_test
+Top-level Entity Name : Text_screen_test
+Family : MAX 10
+Total logic elements : 345
+    Total combinational functions : 307
+    Dedicated logic registers : 96
+Total registers : 96
+Total pins : 17
+Total virtual pins : 0
+Total memory bits : 65,536
+Embedded Multiplier 9-bit elements : 0
+Total PLLs : 1
+UFM blocks : 0
+ADC blocks : 0
