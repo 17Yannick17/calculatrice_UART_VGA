@@ -1,10 +1,10 @@
-Analysis & Synthesis Status : Successful - Tue Apr  7 08:48:20 2026
+Analysis & Synthesis Status : Successful - Fri Apr 10 12:26:28 2026
 Quartus Prime Version : 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
 Revision Name : Projet
 Top-level Entity Name : calculator_vga_top
 Family : MAX 10
-Total logic elements : 1,900
-    Total combinational functions : 1,781
+Total logic elements : 1,906
+    Total combinational functions : 1,787
     Dedicated logic registers : 286
 Total registers : 286
 Total pins : 18

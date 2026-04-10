@@ -110,7 +110,7 @@ begin
 					end if;
 				else
 					-- Fond noir hors de la calculatrice : aucune composante RGB active.
-					if (xpix < 32 or xpix > 607 or ypix < 8 or ypix > 303) then
+					if (xpix < 40 or xpix > 607 or ypix < 8 or ypix > 303) then
 						r <= "0000";
 						g <= "0000";
 						b <= "0000";
@@ -128,13 +128,13 @@ begin
 						b <= "0101";
 					
 					-- Colonne des opérateurs : violet/bleu plus soutenu pour la distinguer.
-					elsif (xpix >= 464 and xpix <= 607 and ypix >= 104 and ypix <= 303) then
+					elsif (xpix >= 470 and xpix <= 607 and ypix >= 104 and ypix <= 303) then
 						r <= "0011";
 						g <= "0010";
 						b <= "0110";
 					
 					-- Zone RESET en bas à gauche : rouge sombre pour attirer l'attention.
-					elsif (xpix >= 32 and xpix <= 319 and ypix >= 264 and ypix <= 303) then
+					elsif (xpix >= 40 and xpix <= 325 and ypix >= 264 and ypix <= 303) then
 						r <= "0101";
 						g <= "0010";
 						b <= "0010";
