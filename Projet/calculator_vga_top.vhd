@@ -47,18 +47,8 @@ begin
             rx_data  => rx_data_s,
             rx_valid => rx_valid_s
         );
-
-    cpu_inst : entity work.cpu
-        port map(
-            clk   => CLOCK_50,
-            reset => reset_s,
-            run   => cpu_run_s,
-            DIN   => cpu_din_s,
-            Bus_o => cpu_bus_s,
-            done  => cpu_done_s,
-            NEG   => cpu_neg_s
-        );
-
+		  
+		  
     controller_inst : entity work.controller
         port map(
             clk          => CLOCK_50,
@@ -78,6 +68,19 @@ begin
             neg_o        => neg_s,
             div0_o       => div0_s
         );
+
+		  
+    cpu_inst : entity work.cpu
+        port map(
+            clk   => CLOCK_50,
+            reset => reset_s,
+            run   => cpu_run_s,
+            DIN   => cpu_din_s,
+            Bus_o => cpu_bus_s,
+            done  => cpu_done_s,
+            NEG   => cpu_neg_s
+        );
+
 
     vga_display_inst : entity work.vga_calc_display
         port map(

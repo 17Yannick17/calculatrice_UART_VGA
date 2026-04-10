@@ -1,0 +1,29 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity uart_test is
+    Port(
+        CLOCK_50 : in  STD_LOGIC;
+        UART_RX  : in  STD_LOGIC;
+        LEDR     : out STD_LOGIC_VECTOR(7 downto 0);
+        LEDG     : out STD_LOGIC
+    );
+end uart_test;
+
+architecture Behavioral of uart_test is
+    signal data_s  : STD_LOGIC_VECTOR(7 downto 0);
+    signal valid_s : STD_LOGIC;
+begin
+
+    U1 : entity work.UART
+        port map(
+            clock_50 => CLOCK_50,
+            rx       => UART_RX,
+            rx_data  => data_s,
+            rx_valid => valid_s
+        );
+
+    LEDR <= data_s;   -- affiche l'octet reçu
+    LEDG <= valid_s;  -- clignote quand un caractère est reçu
+
+end Behavioral;
