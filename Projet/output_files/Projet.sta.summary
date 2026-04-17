@@ -3,75 +3,75 @@ Timing Analyzer Summary
 ------------------------------------------------------------
 
 Type  : Slow 1200mV 85C Model Setup 'CLOCK_50'
-Slack : -11.865
-TNS   : -76.940
+Slack : -11.245
+TNS   : -86.003
 
 Type  : Slow 1200mV 85C Model Setup 'vga_display_inst|vga_ui|pll|altpll_component|auto_generated|pll1|clk[0]'
-Slack : 30.364
+Slack : 30.540
 TNS   : 0.000
 
 Type  : Slow 1200mV 85C Model Hold 'vga_display_inst|vga_ui|pll|altpll_component|auto_generated|pll1|clk[0]'
-Slack : 0.309
+Slack : 0.294
 TNS   : 0.000
 
 Type  : Slow 1200mV 85C Model Hold 'CLOCK_50'
-Slack : 0.341
+Slack : 0.309
 TNS   : 0.000
 
 Type  : Slow 1200mV 85C Model Minimum Pulse Width 'CLOCK_50'
-Slack : 9.412
+Slack : 9.411
 TNS   : 0.000
 
 Type  : Slow 1200mV 85C Model Minimum Pulse Width 'vga_display_inst|vga_ui|pll|altpll_component|auto_generated|pll1|clk[0]'
-Slack : 19.523
+Slack : 19.519
 TNS   : 0.000
 
 Type  : Slow 1200mV 0C Model Setup 'CLOCK_50'
-Slack : -9.142
-TNS   : -42.540
+Slack : -8.577
+TNS   : -51.810
 
 Type  : Slow 1200mV 0C Model Setup 'vga_display_inst|vga_ui|pll|altpll_component|auto_generated|pll1|clk[0]'
-Slack : 31.104
+Slack : 31.243
 TNS   : 0.000
 
 Type  : Slow 1200mV 0C Model Hold 'vga_display_inst|vga_ui|pll|altpll_component|auto_generated|pll1|clk[0]'
-Slack : 0.263
+Slack : 0.253
 TNS   : 0.000
 
 Type  : Slow 1200mV 0C Model Hold 'CLOCK_50'
-Slack : 0.306
+Slack : 0.305
 TNS   : 0.000
 
 Type  : Slow 1200mV 0C Model Minimum Pulse Width 'CLOCK_50'
-Slack : 9.422
+Slack : 9.424
 TNS   : 0.000
 
 Type  : Slow 1200mV 0C Model Minimum Pulse Width 'vga_display_inst|vga_ui|pll|altpll_component|auto_generated|pll1|clk[0]'
-Slack : 19.533
+Slack : 19.535
 TNS   : 0.000
 
 Type  : Fast 1200mV 0C Model Setup 'CLOCK_50'
-Slack : 6.921
+Slack : 7.414
 TNS   : 0.000
 
 Type  : Fast 1200mV 0C Model Setup 'vga_display_inst|vga_ui|pll|altpll_component|auto_generated|pll1|clk[0]'
-Slack : 35.562
-TNS   : 0.000
-
-Type  : Fast 1200mV 0C Model Hold 'vga_display_inst|vga_ui|pll|altpll_component|auto_generated|pll1|clk[0]'
-Slack : 0.145
+Slack : 35.663
 TNS   : 0.000
 
 Type  : Fast 1200mV 0C Model Hold 'CLOCK_50'
-Slack : 0.148
+Slack : 0.121
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Hold 'vga_display_inst|vga_ui|pll|altpll_component|auto_generated|pll1|clk[0]'
+Slack : 0.139
 TNS   : 0.000
 
 Type  : Fast 1200mV 0C Model Minimum Pulse Width 'CLOCK_50'
-Slack : 9.276
+Slack : 9.275
 TNS   : 0.000
 
 Type  : Fast 1200mV 0C Model Minimum Pulse Width 'vga_display_inst|vga_ui|pll|altpll_component|auto_generated|pll1|clk[0]'
-Slack : 19.556
+Slack : 19.555
 TNS   : 0.000
 
 ------------------------------------------------------------

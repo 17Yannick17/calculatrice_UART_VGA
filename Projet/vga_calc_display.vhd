@@ -16,6 +16,8 @@ entity vga_calc_display is
         busy          : in std_logic;
         neg           : in std_logic;
         div0          : in std_logic;
+		  operand1_neg   : in std_logic;
+		  operand2_neg   : in std_logic;
 
         VGA_R, VGA_G, VGA_B : out std_logic_vector(3 downto 0);
         VGA_HS, VGA_VS      : out std_logic
@@ -47,17 +49,45 @@ architecture rtl of vga_calc_display is
         return std_logic_vector(to_unsigned(48 + d, 7)); -- '0' + d
     end function;
 
-    function dec4_char(value : std_logic_vector(9 downto 0); idx : natural) return char7_t is
-			 variable n : natural := to_integer(unsigned(value));
-			 variable d : natural := 0;
+    function dec4_char_blank(n : std_logic_vector(9 downto 0); pos : integer) return std_logic_vector is
+			 variable val : integer;
+			 variable d0, d1, d2, d3 : integer;
 		begin
-			 case idx is
-				  when 0 => d := (n / 1000) mod 10;
-				  when 1 => d := (n / 100) mod 10;
-				  when 2 => d := (n / 10) mod 10;
-				  when others => d := n mod 10;
+			 val := to_integer(unsigned(n));
+
+			 d3 := val / 1000;
+			 d2 := (val mod 1000) / 100;
+			 d1 := (val mod 100) / 10;
+			 d0 := val mod 10;
+
+			 case pos is
+				  when 0 =>
+						if val >= 1000 then
+							 return char7(character'val(character'pos('0') + d3));
+						else
+							 return char7(' ');
+						end if;
+
+				  when 1 =>
+						if val >= 100 then
+							 return char7(character'val(character'pos('0') + d2));
+						else
+							 return char7(' ');
+						end if;
+
+				  when 2 =>
+						if val >= 10 then
+							 return char7(character'val(character'pos('0') + d1));
+						else
+							 return char7(' ');
+						end if;
+
+				  when 3 =>
+						return char7(character'val(character'pos('0') + d0));
+
+				  when others =>
+						return char7(' ');
 			 end case;
-			 return digit_char(d);
 		end function;
 
     function op_char(op : std_logic_vector(7 downto 0)) return char7_t is
@@ -138,16 +168,22 @@ begin
                         end case;
 
                     -- A = value
-                    elsif (y = 8 and x = 8) then
-                        mem_in <= char7('A');
-                    elsif (y = 8 and x = 10) then
-                        mem_in <= char7('=');
-                    elsif (y = 8 and x >= 12 and x <= 15) then
-							 if (operand1 /= "0000000000") or (operator_ascii /= x"00") or (busy = '1') or (result_valid = '1') then
-								  mem_in <= dec4_char(operand1, to_integer(x) - 12);
-							 else
-								  mem_in <= char7('?');
-							 end if;
+                     elsif (y = 8 and x = 8) then
+								 mem_in <= char7('A');
+							elsif (y = 8 and x = 10) then
+								 mem_in <= char7('=');
+							elsif (y = 8 and x = 12) then
+								 if operand1_neg = '1' then
+									  mem_in <= char7('-');
+								 else
+									  mem_in <= char7(' ');
+								 end if;
+							elsif (y = 8 and x >= 13 and x <= 16) then
+								 if (operand1 /= "0000000000") or (operand1_neg = '1') or (operator_ascii /= x"00") or (busy = '1') or (result_valid = '1') then
+									  mem_in <= dec4_char_blank(operand1, to_integer(x) - 13);
+								 else
+									  mem_in <= char7('?');
+								 end if;
 
                     -- OP = value
                     elsif (y = 8 and x = 31) then
@@ -168,14 +204,19 @@ begin
 								 mem_in <= char7('B');
 							elsif (y = 8 and x = 61) then
 								 mem_in <= char7('=');
-							elsif (y = 8 and x >= 63 and x <= 66) then
-								 if unary_op(operator_ascii) then
+							elsif (y = 8 and x = 63) then
+								 if operand2_neg = '1' then
 									  mem_in <= char7('-');
-								 elsif (operand2 /= "0000000000") or (result_valid = '1') or (div0 = '1') then
-									  mem_in <= dec4_char(operand2, to_integer(x) - 63);
+								 else
+									  mem_in <= char7(' ');
+								 end if;
+							elsif (y = 8 and x >= 64 and x <= 67) then
+								 if (operand2 /= "0000000000") or (operand2_neg = '1') or (result_valid = '1') or (div0 = '1') then
+									  mem_in <= dec4_char_blank(operand2, to_integer(x) - 64);
 								 else
 									  mem_in <= char7('?');
 								 end if;
+								 
                     -- RESULTAT = value
                     elsif (y = 11 and x >= 24 and x <= 31) then
                         case to_integer(x) is
@@ -209,10 +250,10 @@ begin
 												 else
 													  mem_in <= char7(' ');
 												 end if;
-											when 36 => mem_in <= dec4_char(result, 0);
-											when 37 => mem_in <= dec4_char(result, 1);
-											when 38 => mem_in <= dec4_char(result, 2);
-											when 39 => mem_in <= dec4_char(result, 3);
+											when 36 => mem_in <= dec4_char_blank(result, 0);
+											when 37 => mem_in <= dec4_char_blank(result, 1);
+											when 38 => mem_in <= dec4_char_blank(result, 2);
+											when 39 => mem_in <= dec4_char_blank(result, 3);
 											when others => mem_in <= char7(' ');
 									  end case;
 								 else

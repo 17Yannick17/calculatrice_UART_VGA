@@ -36,6 +36,10 @@ architecture rtl of calculator_vga_top is
     signal busy_s       : std_logic;
     signal neg_s        : std_logic;
     signal div0_s       : std_logic;
+	 
+	 signal operand1_neg_s : std_logic;
+    signal operand2_neg_s : std_logic;
+	 
 begin
     -- KEY(0) est actif à 0 sur la carte, on l'inverse pour le reste du design.
     reset_s <= not KEY(0);
@@ -73,6 +77,8 @@ begin
             operand2_o   => operand2_s,
             result_o     => result_s,
             operator_o   => operator_s,
+				operand1_neg_o => operand1_neg_s,
+				operand2_neg_o => operand2_neg_s,
             result_valid => result_ok_s,
             busy         => busy_s,
             neg_o        => neg_s,
@@ -91,6 +97,8 @@ begin
             busy          => busy_s,
             neg           => neg_s,
             div0          => div0_s,
+				operand1_neg   => operand1_neg_s,
+				operand2_neg   => operand2_neg_s,
             VGA_R         => VGA_R,
             VGA_G         => VGA_G,
             VGA_B         => VGA_B,
