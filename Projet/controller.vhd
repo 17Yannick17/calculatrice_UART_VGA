@@ -12,17 +12,17 @@ entity controller is
         rx_valid  : in  std_logic;
 
         -- vers CPU
-        cpu_din   : out std_logic_vector(8 downto 0);
+        cpu_din   : out std_logic_vector(9 downto 0);
         cpu_run   : out std_logic;
 
         -- depuis CPU
-        cpu_bus   : in  std_logic_vector(8 downto 0);
+        cpu_bus   : in  std_logic_vector(9 downto 0);
         cpu_done  : in  std_logic;
 
         -- pour affichage / debug
-        operand1_o    : out std_logic_vector(8 downto 0);
-        operand2_o    : out std_logic_vector(8 downto 0);
-        result_o      : out std_logic_vector(8 downto 0);
+        operand1_o    : out std_logic_vector(9 downto 0);
+        operand2_o    : out std_logic_vector(9 downto 0);
+        result_o      : out std_logic_vector(9 downto 0);
         operator_o    : out std_logic_vector(7 downto 0);
         result_valid  : out std_logic;
         busy          : out std_logic;
@@ -48,26 +48,30 @@ architecture Behavioral of controller is
 
     signal state : state_t := OPERANDE1;
 
-    signal operand1_u : unsigned(8 downto 0) := (others => '0');
-    signal operand2_u : unsigned(8 downto 0) := (others => '0');
-    signal result_u   : unsigned(8 downto 0) := (others => '0');
+    signal operand1_u : unsigned(9 downto 0) := (others => '0');
+    signal operand2_u : unsigned(9 downto 0) := (others => '0');
+    signal result_u   : unsigned(9 downto 0) := (others => '0');
 
-    signal op_code    : std_logic_vector(2 downto 0) := (others => '0');
+    signal op_code    : std_logic_vector(3 downto 0) := (others => '0');
     signal op_ascii   : std_logic_vector(7 downto 0) := (others => '0');
 
     signal has_operand1    : std_logic := '0';
     signal has_operand2    : std_logic := '0';
     signal unary_op   : std_logic := '0';
 
-    signal cpu_din_s  : std_logic_vector(8 downto 0) := (others => '0');
+    signal cpu_din_s  : std_logic_vector(9 downto 0) := (others => '0');
     signal cpu_run_s  : std_logic := '0';
 
     signal neg_s      : std_logic := '0';
     signal div0_s     : std_logic := '0';
     signal result_ok  : std_logic := '0';
+	 
+	 signal chain_pending      : std_logic := '0';
+	 signal next_op_code       : std_logic_vector(3 downto 0) := (others => '0');
+	 signal next_op_ascii      : std_logic_vector(7 downto 0) := (others => '0');
 
     function make_instr(
-        opcode : std_logic_vector(2 downto 0);
+        opcode : std_logic_vector(3 downto 0);
         rx     : std_logic_vector(2 downto 0);
         ry     : std_logic_vector(2 downto 0)
     ) return std_logic_vector is
@@ -83,7 +87,7 @@ architecture Behavioral of controller is
 
     function ascii_to_digit(c : std_logic_vector(7 downto 0)) return unsigned is
     begin
-        return resize(unsigned(c) - to_unsigned(48, 8), 9);
+        return resize(unsigned(c) - to_unsigned(48, 8), 10);
     end function;
 
 begin
@@ -101,7 +105,7 @@ begin
     div0_o       <= div0_s;
 
     process(clk)
-        variable digit_v : unsigned(8 downto 0);
+        variable digit_v : unsigned(9 downto 0);
     begin
         if rising_edge(clk) then
             cpu_run_s <= '0';
@@ -120,6 +124,9 @@ begin
                 neg_s      <= '0';
                 div0_s     <= '0';
                 cpu_din_s  <= (others => '0');
+					 chain_pending <= '0';
+					 next_op_code  <= (others => '0');
+					 next_op_ascii <= (others => '0');
 
             else
                 case state is
@@ -149,7 +156,7 @@ begin
                             elsif has_operand1 = '1' then
                                 case rx_data is
                                     when x"2B" =>  -- '+'
-                                        op_code  <= "010";
+                                        op_code  <= "0010";
                                         op_ascii <= rx_data;
                                         unary_op <= '0';
                                         operand2_u <= (others => '0');
@@ -157,7 +164,7 @@ begin
                                         state   <= OPERANDE2;
 
                                     when x"2D" =>  -- '-'
-                                        op_code  <= "011";
+                                        op_code  <= "0011";
                                         op_ascii <= rx_data;
                                         unary_op <= '0';
                                         operand2_u <= (others => '0');
@@ -165,7 +172,7 @@ begin
                                         state   <= OPERANDE2;
 
                                     when x"2A" =>  -- '*'
-                                        op_code  <= "100";
+                                        op_code  <= "0100";
                                         op_ascii <= rx_data;
                                         unary_op <= '0';
                                         operand2_u <= (others => '0');
@@ -173,7 +180,7 @@ begin
                                         state   <= OPERANDE2;
 
                                     when x"2F" =>  -- '/'
-                                        op_code  <= "101";
+                                        op_code  <= "0101";
                                         op_ascii <= rx_data;
                                         unary_op <= '0';
                                         operand2_u <= (others => '0');
@@ -181,13 +188,13 @@ begin
                                         state   <= OPERANDE2;
 
                                     when x"73" =>  -- 's' = square
-                                        op_code  <= "110";
+                                        op_code  <= "0110";
                                         op_ascii <= rx_data;
                                         unary_op <= '1';
                                         state    <= LOAD_R1_INSTRUCTION;
 
                                     when x"63" =>  -- 'c' = cube
-                                        op_code  <= "111";
+                                        op_code  <= "0111";
                                         op_ascii <= rx_data;
                                         unary_op <= '1';
                                         state    <= LOAD_R1_INSTRUCTION;
@@ -221,17 +228,57 @@ begin
                                 operand2_u <= resize(operand2_u * to_unsigned(10, operand2_u'length) + digit_v, operand2_u'length);
                                 has_operand2 <= '1';
 
-                            elsif rx_data = x"3D" and has_operand2 = '1' then  -- '='
-                                state <= LOAD_R1_INSTRUCTION;
-                            end if;
+                            elsif has_operand2 = '1' then
+										 case rx_data is
+											  when x"73" =>  -- 's' : carré de B
+													operand2_u <= resize(operand2_u * operand2_u, operand2_u'length);
+
+											  when x"63" =>  -- 'c' : cube de B
+													operand2_u <= to_unsigned(
+														 to_integer(operand2_u) * to_integer(operand2_u) * to_integer(operand2_u),
+														 operand2_u'length
+													);
+
+											  when x"3D" =>  -- '='
+													chain_pending <= '0';
+													state <= LOAD_R1_INSTRUCTION;
+
+											  when x"2B" =>  -- '+'
+													chain_pending <= '1';
+													next_op_code  <= "0010";
+													next_op_ascii <= rx_data;
+													state <= LOAD_R1_INSTRUCTION;
+
+											  when x"2D" =>  -- '-'
+													chain_pending <= '1';
+													next_op_code  <= "0011";
+													next_op_ascii <= rx_data;
+													state <= LOAD_R1_INSTRUCTION;
+
+											  when x"2A" =>  -- '*'
+													chain_pending <= '1';
+													next_op_code  <= "0100";
+													next_op_ascii <= rx_data;
+													state <= LOAD_R1_INSTRUCTION;
+
+											  when x"2F" =>  -- '/'
+													chain_pending <= '1';
+													next_op_code  <= "0101";
+													next_op_ascii <= rx_data;
+													state <= LOAD_R1_INSTRUCTION;
+
+											  when others =>
+													null;
+										 end case;
+									end if;
                         end if;
 
                     ------------------------------------------------------
                     -- MICRO-SEQUENCE CPU
                     ------------------------------------------------------
                     when LOAD_R1_INSTRUCTION =>
-                        -- MVI R1, imm  => opcode=001, Rx=001, Ry=000
-                        cpu_din_s <= make_instr("001", "001", "000");
+                        -- MVI R1, imm  => opcode=0001, Rx=001, Ry=000
+                        cpu_din_s <= make_instr("0001", "001", "000");
                         cpu_run_s <= '1';
                         state <= LOAD_R1_VALUE;
 
@@ -247,8 +294,8 @@ begin
                         end if;
 
                     when LOAD_R2_INSTRUCTION =>
-                        -- MVI R2, imm  => opcode=001, Rx=010, Ry=000
-                        cpu_din_s <= make_instr("001", "010", "000");
+                        -- MVI R2, imm  => opcode=0001, Rx=010, Ry=000
+                        cpu_din_s <= make_instr("0001", "010", "000");
                         cpu_run_s <= '1';
                         state <= LOAD_R2_VALUE;
 
@@ -266,7 +313,7 @@ begin
                         cpu_run_s <= '1';
 
                         -- flags calculés côté contrôleur
-                        if op_code = "011" then
+                        if op_code = "0011" then
                             if operand1_u < operand2_u then
                                 neg_s <= '1';
                             else
@@ -276,7 +323,7 @@ begin
                             neg_s <= '0';
                         end if;
 
-                        if op_code = "101" and operand2_u = 0 then
+                        if op_code = "0101" and operand2_u = 0 then
                             div0_s <= '1';
                         else
                             div0_s <= '0';
@@ -285,53 +332,152 @@ begin
                         state <= ATTENTE_EXECUTION;
 
                     when ATTENTE_EXECUTION =>
-								if cpu_done = '1' then
-									if div0_s = '1' then
+							 if cpu_done = '1' then
+								  if div0_s = '1' then
 										result_u <= (others => '0');
 										state <= ERROR;
-									else
+								  else
 										result_u <= unsigned(cpu_bus);
-										cpu_din_s <= make_instr("000", "000", "001");
+										cpu_din_s <= make_instr("0000", "000", "001");
 										cpu_run_s <= '1';
-										state <= SHOW_RESULT;
-									end if;
-								end if;
-								
+
+										if chain_pending = '1' then
+											 operand1_u <= unsigned(cpu_bus);
+											 operand2_u <= (others => '0');
+											 op_code    <= next_op_code;
+											 op_ascii   <= next_op_ascii;
+											 has_operand1 <= '1';
+											 has_operand2 <= '0';
+											 unary_op   <= '0';
+											 neg_s      <= '0';
+											 div0_s     <= '0';
+											 chain_pending <= '0';
+											 state <= OPERANDE2;
+										else
+											 state <= SHOW_RESULT;
+										end if;
+								  end if;
+							 end if;
+														
                     ------------------------------------------------------
                     -- RESULTAT
                     ------------------------------------------------------
                     when SHOW_RESULT =>
-                        result_ok <= '1';
+							 result_ok <= '1';
 
-                        if rx_valid = '1' then
-                            if rx_data = x"43" then  -- 'C'
-                                operand1_u <= (others => '0');
-                                operand2_u <= (others => '0');
-                                result_u   <= (others => '0');
-                                op_code    <= (others => '0');
-                                op_ascii   <= (others => '0');
-                                has_operand1    <= '0';
-                                has_operand2    <= '0';
-                                unary_op   <= '0';
-                                neg_s      <= '0';
-                                div0_s     <= '0';
-                                state      <= OPERANDE1;
+							 if rx_valid = '1' then
+								  if rx_data = x"43" then  -- 'C'
+										operand1_u <= (others => '0');
+										operand2_u <= (others => '0');
+										result_u   <= (others => '0');
+										op_code    <= (others => '0');
+										op_ascii   <= (others => '0');
+										has_operand1 <= '0';
+										has_operand2 <= '0';
+										unary_op   <= '0';
+										neg_s      <= '0';
+										div0_s     <= '0';
+										chain_pending <= '0';
+										next_op_code  <= (others => '0');
+										next_op_ascii <= (others => '0');
+										state      <= OPERANDE1;
 
-                            elsif is_digit(rx_data) then
-                                -- nouveau calcul
-                                operand1_u <= ascii_to_digit(rx_data);
-                                operand2_u <= (others => '0');
-                                result_u   <= (others => '0');
-                                op_code    <= (others => '0');
-                                op_ascii   <= (others => '0');
-                                has_operand1    <= '1';
-                                has_operand2    <= '0';
-                                unary_op   <= '0';
-                                neg_s      <= '0';
-                                div0_s     <= '0';
-                                state      <= OPERANDE1;
-                            end if;
-                        end if;
+								  elsif is_digit(rx_data) then
+										-- nouveau calcul
+										operand1_u <= ascii_to_digit(rx_data);
+										operand2_u <= (others => '0');
+										result_u   <= (others => '0');
+										op_code    <= (others => '0');
+										op_ascii   <= (others => '0');
+										has_operand1 <= '1';
+										has_operand2 <= '0';
+										unary_op   <= '0';
+										neg_s      <= '0';
+										div0_s     <= '0';
+										chain_pending <= '0';
+										next_op_code  <= (others => '0');
+										next_op_ascii <= (others => '0');
+										state      <= OPERANDE1;
+
+								  else
+										case rx_data is
+											 when x"2B" =>  -- '+'
+												  operand1_u <= result_u;
+												  operand2_u <= (others => '0');
+												  op_code    <= "0010";
+												  op_ascii   <= rx_data;
+												  has_operand1 <= '1';
+												  has_operand2 <= '0';
+												  unary_op   <= '0';
+												  neg_s      <= '0';
+												  div0_s     <= '0';
+												  state      <= OPERANDE2;
+
+											 when x"2D" =>  -- '-'
+												  operand1_u <= result_u;
+												  operand2_u <= (others => '0');
+												  op_code    <= "0011";
+												  op_ascii   <= rx_data;
+												  has_operand1 <= '1';
+												  has_operand2 <= '0';
+												  unary_op   <= '0';
+												  neg_s      <= '0';
+												  div0_s     <= '0';
+												  state      <= OPERANDE2;
+
+											 when x"2A" =>  -- '*'
+												  operand1_u <= result_u;
+												  operand2_u <= (others => '0');
+												  op_code    <= "0100";
+												  op_ascii   <= rx_data;
+												  has_operand1 <= '1';
+												  has_operand2 <= '0';
+												  unary_op   <= '0';
+												  neg_s      <= '0';
+												  div0_s     <= '0';
+												  state      <= OPERANDE2;
+
+											 when x"2F" =>  -- '/'
+												  operand1_u <= result_u;
+												  operand2_u <= (others => '0');
+												  op_code    <= "0101";
+												  op_ascii   <= rx_data;
+												  has_operand1 <= '1';
+												  has_operand2 <= '0';
+												  unary_op   <= '0';
+												  neg_s      <= '0';
+												  div0_s     <= '0';
+												  state      <= OPERANDE2;
+
+											 when x"73" =>  -- 's' => square du résultat
+												  operand1_u <= result_u;
+												  operand2_u <= (others => '0');
+												  op_code    <= "0110";
+												  op_ascii   <= rx_data;
+												  has_operand1 <= '1';
+												  has_operand2 <= '0';
+												  unary_op   <= '1';
+												  neg_s      <= '0';
+												  div0_s     <= '0';
+												  state      <= LOAD_R1_INSTRUCTION;
+
+											 when x"63" =>  -- 'c' => cube du résultat
+												  operand1_u <= result_u;
+												  operand2_u <= (others => '0');
+												  op_code    <= "0111";
+												  op_ascii   <= rx_data;
+												  has_operand1 <= '1';
+												  has_operand2 <= '0';
+												  unary_op   <= '1';
+												  neg_s      <= '0';
+												  div0_s     <= '0';
+												  state      <= LOAD_R1_INSTRUCTION;
+
+											 when others =>
+												  null;
+										end case;
+								  end if;
+							 end if;
 
                     when ERROR =>
                         if rx_valid = '1' and rx_data = x"43" then

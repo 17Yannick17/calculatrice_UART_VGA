@@ -20,12 +20,12 @@ use work.ff.all;
 entity fsm is
 	Port (
 		clk, reset, run : in  STD_LOGIC;
-		instruction : in  STD_LOGIC_VECTOR(8 downto 0); -- Format IIIXXXYYY
+		instruction : in  STD_LOGIC_VECTOR(9 downto 0); -- Format IIIIXXXYYY
 		
 		-- Signaux de contrôle envoyés vers le datapath
 		done, Ain, Gin, IRin, Gout, DINout : out STD_LOGIC;
 		Rin, Rout : out STD_LOGIC_VECTOR(7 downto 0);
-		operation : out std_logic_vector(2 downto 0)
+		operation : out std_logic_vector(3 downto 0)
 	);
 end fsm;
 
@@ -55,7 +55,7 @@ begin
 	process(all)
 	begin
 		-- valeurs par défaut
-		done <= '0'; Ain <= '0'; Gin <= '0'; IRin <= '0'; operation <= "000"; Gout <= '0'; DINout <= '0';
+		done <= '0'; Ain <= '0'; Gin <= '0'; IRin <= '0'; operation <= "0000"; Gout <= '0'; DINout <= '0';
 		Rin  <= (others => '0'); Rout <= (others => '0');
 
 		case current_state is
@@ -70,49 +70,49 @@ begin
 				
 			-- Décodage de l'instruction et première étape de traitement
 			when T1 => 
-				case instruction(8 downto 6) is
-						when "000" => 
+				case instruction(9 downto 6) is
+						when "0000" => 
 							Rout <= Ry_dec;
 							Rin  <= Rx_dec;
 							done <= '1';
 							next1 <= T0;
 							
-						when "001" => 
+						when "0001" => 
 							DINout <= '1';
 							Rin  <= Rx_dec;
 							done <= '1';
 							next1 <= T0;
 							
-						when "010" => 
+						when "0010" => 
 							Rout <= Rx_dec;
 							Ain <= '1';
 							next1 <= T2;
 							
-						when "011" =>
+						when "0011" =>
 							Rout <= Rx_dec;
 							Ain <= '1'; 
 							next1 <= T2;
 							
-						when "100" => 
+						when "0100" => 
 							Rout <= Rx_dec;
 							Ain <= '1';
 							next1 <= T2;
 							
-						when "101" => 
+						when "0101" => 
 							Rout <= Rx_dec;
 							Ain <= '1';
 							next1 <= T2;
 							
-						when "110" => 
+						when "0110" => 
 							Rout <= Rx_dec;
 							Gin <= '1';
-							operation <= "110";
+							operation <= "0110";
 							next1 <= T2;
 							
-						when "111" => 
+						when "0111" => 
 							Rout <= Rx_dec;
 							Gin <= '1';
-							operation <= "111";
+							operation <= "0111";
 							next1 <= T2;
 							
 						when others => 
@@ -122,32 +122,32 @@ begin
 			-- Exécution de l'opération arithmétique dans l'ALU
 			-- Le registre A contient déjà Rx. On place Ry sur le bus puis on charge le résultat dans G.
 			when T2 => 
-				case instruction(8 downto 6) is
-					when "010" =>
+				case instruction(9 downto 6) is
+					when "0010" =>
 						Rout <= Ry_dec;
 						Gin <= '1';
-						operation <= "010";
+						operation <= "0010";
 						next1 <= T3;
 
-					when "011" =>
+					when "0011" =>
 						Rout <= Ry_dec;
 						Gin <= '1';
-						operation <= "011";
+						operation <= "0011";
 						next1 <= T3;
 						
-					when "100" => 
+					when "0100" => 
 							Rout <= Ry_dec;
 							Gin <= '1';
-							operation <= "100";
+							operation <= "0100";
 							next1 <= T3;
 							
-					when "101" => 
+					when "0101" => 
 							Rout <= Ry_dec;
 							Gin <= '1';
-							operation <= "101";
+							operation <= "0101";
 							next1 <= T3;
 							
-					when "110" | "111" => 
+					when "0110" | "0111" => 
 							Gout <= '1';
 							Rin  <= Rx_dec;
 							done <= '1';
@@ -160,8 +160,8 @@ begin
 			-- Écriture du résultat final contenu dans G vers Rx
 			-- Cette étape termine les instructions ADD et SUB.
 			when T3 =>
-				case instruction(8 downto 6) is
-					when "010" | "011" | "100" | "101" =>
+				case instruction(9 downto 6) is
+					when "0010" | "0011" | "0100" | "0101" =>
 						Gout <= '1';
 						Rin  <= Rx_dec;
 						done <= '1';

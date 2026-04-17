@@ -22,15 +22,15 @@ architecture rtl of calculator_vga_top is
     signal rx_data_s    : std_logic_vector(7 downto 0);
     signal rx_valid_s   : std_logic;
 
-    signal cpu_din_s    : std_logic_vector(8 downto 0);
+    signal cpu_din_s    : std_logic_vector(9 downto 0);
     signal cpu_run_s    : std_logic;
-    signal cpu_bus_s    : std_logic_vector(8 downto 0);
+    signal cpu_bus_s    : std_logic_vector(9 downto 0);
     signal cpu_done_s   : std_logic;
     signal cpu_neg_s    : std_logic;
 
-    signal operand1_s   : std_logic_vector(8 downto 0);
-    signal operand2_s   : std_logic_vector(8 downto 0);
-    signal result_s     : std_logic_vector(8 downto 0);
+    signal operand1_s   : std_logic_vector(9 downto 0);
+    signal operand2_s   : std_logic_vector(9 downto 0);
+    signal result_s     : std_logic_vector(9 downto 0);
     signal operator_s   : std_logic_vector(7 downto 0);
     signal result_ok_s  : std_logic;
     signal busy_s       : std_logic;

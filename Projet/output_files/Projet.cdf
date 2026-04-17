@@ -4,7 +4,7 @@ JedecChain;
 	DefaultMfr(6E);
 
 	P ActionCode(Cfg)
-		Device PartName(10M50DAF484) Path("C:/Users/yokagone/Desktop/calculatrice_UART_VGA/Projet/output_files/") File("Projet.sof") MfrSpec(OpMask(1));
+		Device PartName(10M50DAF484) Path("C:/Users/nyhien/Desktop/calculatrice_UART_VGA/Projet/output_files/") File("Projet.sof") MfrSpec(OpMask(1));
 
 ChainEnd;
 
