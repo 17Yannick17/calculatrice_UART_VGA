@@ -55,6 +55,7 @@ architecture Behavioral of controller is
     signal op_code    : std_logic_vector(3 downto 0) := (others => '0');
     signal op_ascii   : std_logic_vector(7 downto 0) := (others => '0');
 
+	 signal has_ans : std_logic := '0';
     signal has_operand1    : std_logic := '0';
     signal has_operand2    : std_logic := '0';
     signal unary_op   : std_logic := '0';
@@ -118,6 +119,7 @@ begin
                 result_u   <= (others => '0');
                 op_code    <= (others => '0');
                 op_ascii   <= (others => '0');
+					 has_ans		     <= '0';
                 has_operand1    <= '0';
                 has_operand2    <= '0';
                 unary_op   <= '0';
@@ -139,7 +141,6 @@ begin
                             if rx_data = x"43" then  -- 'C'
                                 operand1_u <= (others => '0');
                                 operand2_u <= (others => '0');
-                                result_u   <= (others => '0');
                                 op_code    <= (others => '0');
                                 op_ascii   <= (others => '0');
                                 has_operand1    <= '0';
@@ -148,6 +149,10 @@ begin
                                 neg_s      <= '0';
                                 div0_s     <= '0';
 
+									 elsif rx_data = x"41" and has_ans = '1' then  -- 'A' = ANS
+										 operand1_u <= result_u;   -- ou valeur mémorisée depuis R0
+										 has_operand1 <= '1';	  
+									
                             elsif is_digit(rx_data) then
                                 digit_v := ascii_to_digit(rx_data);
                                 operand1_u <= resize(operand1_u * to_unsigned(10, operand1_u'length) + digit_v, operand1_u'length);
@@ -213,7 +218,6 @@ begin
                             if rx_data = x"43" then  -- 'C'
                                 operand1_u <= (others => '0');
                                 operand2_u <= (others => '0');
-                                result_u   <= (others => '0');
                                 op_code    <= (others => '0');
                                 op_ascii   <= (others => '0');
                                 has_operand1    <= '0';
@@ -223,6 +227,10 @@ begin
                                 div0_s     <= '0';
                                 state      <= OPERANDE1;
 
+									 elsif rx_data = x"41" and has_ans = '1' then  -- 'A'
+										 operand2_u <= result_u;
+										 has_operand2 <= '1';
+										  
                             elsif is_digit(rx_data) then
                                 digit_v := ascii_to_digit(rx_data);
                                 operand2_u <= resize(operand2_u * to_unsigned(10, operand2_u'length) + digit_v, operand2_u'length);
@@ -337,6 +345,7 @@ begin
 										result_u <= (others => '0');
 										state <= ERROR;
 								  else
+										has_ans <= '1';
 										result_u <= unsigned(cpu_bus);
 										cpu_din_s <= make_instr("0000", "000", "001");
 										cpu_run_s <= '1';
@@ -369,7 +378,6 @@ begin
 								  if rx_data = x"43" then  -- 'C'
 										operand1_u <= (others => '0');
 										operand2_u <= (others => '0');
-										result_u   <= (others => '0');
 										op_code    <= (others => '0');
 										op_ascii   <= (others => '0');
 										has_operand1 <= '0';
@@ -483,7 +491,6 @@ begin
                         if rx_valid = '1' and rx_data = x"43" then
                             operand1_u <= (others => '0');
                             operand2_u <= (others => '0');
-                            result_u   <= (others => '0');
                             op_code    <= (others => '0');
                             op_ascii   <= (others => '0');
                             has_operand1    <= '0';

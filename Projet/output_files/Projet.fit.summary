@@ -1,14 +1,14 @@
-Fitter Status : Successful - Fri Apr 17 13:43:20 2026
+Fitter Status : Successful - Fri Apr 17 14:22:29 2026
 Quartus Prime Version : 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
 Revision Name : Projet
 Top-level Entity Name : calculator_vga_top
 Family : MAX 10
 Device : 10M50DAF484C7G
 Timing Models : Final
-Total logic elements : 2,393 / 49,760 ( 5 % )
-    Total combinational functions : 2,343 / 49,760 ( 5 % )
-    Dedicated logic registers : 309 / 49,760 ( < 1 % )
-Total registers : 309
+Total logic elements : 2,415 / 49,760 ( 5 % )
+    Total combinational functions : 2,369 / 49,760 ( 5 % )
+    Dedicated logic registers : 310 / 49,760 ( < 1 % )
+Total registers : 310
 Total pins : 18 / 360 ( 5 % )
 Total virtual pins : 0
 Total memory bits : 65,536 / 1,677,312 ( 4 % )
